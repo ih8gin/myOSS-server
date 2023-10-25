@@ -14,23 +14,23 @@ the whole project consists of three modules：
 * dataServer process local stored data
 * maintenanceUtils consists of several scripts to clean orphan data, recover damaged data and etc 
 ### apiServer
->cd [project dir]<BR>
+>cd [project dir]<BR><BR>
 RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] LISTEN_ADDRESS=[listen addr&port] go run apiServer/apiServerApplication.go
 >
 ### dataServer
->cd [project dir]<BR>
+>cd [project dir]<BR><BR>
 RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] LISTEN_ADDRESS=[listen addr&port] STORAGE_ROOT=[storage root dir] go run dataServer/dataServerApplication.go
 >
 ### maintenanceUtils
->cd [project dir]<BR>
-RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] go run ./maintenanceUtils/deleteOldMetadata/versionLimit.go <BR>
-RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] STORAGE_ROOT=[storage root dir] LISTEN_ADDRESS=127.0.0.1:55556 go run ./maintenanceUtils/deleteOrphanObject/deleteOrphanObject.go <BR>
+>cd [project dir]<BR><BR>
+RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] go run ./maintenanceUtils/deleteOldMetadata/versionLimit.go <BR><BR>
+RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] STORAGE_ROOT=[storage root dir] LISTEN_ADDRESS=127.0.0.1:55556 go run ./maintenanceUtils/deleteOrphanObject/deleteOrphanObject.go <BR><BR>
 RABBITMQ_SERVER=[rabbitMQ addr] ES_SERVER=[es addr] STORAGE_ROOT=[storage root dir] go run ./maintenanceUtils/ObjectScanner/scan.go
 >
 # how to use
 deploy apiServer and dataServer, use api as below
 
-|                           路径                           | header                                                                                         | body           | reply                         | 功能                                      |
+|                      request url                       | header                                                                                         | body           | reply                         | function                                |
 |:------------------------------------------------------:|:-----------------------------------------------------------------------------------------------|:---------------|:------------------------------|:----------------------------------------|
 |          GET [apiServer]/objects/[objectName]          | range：[startByte]-[endByte]（optional）<br/>Accept-Encoding:gzip（optional）                       |                | object                        | download object                         ||
 | GET [apiServer]/objects/[objectName]?version=[version] | range：[startByte]-[endByte]（optional）<br/>Accept-Encoding:gzip（optional）                       |                | object                        | download object of certain version      |

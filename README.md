@@ -14,17 +14,17 @@ elasticsearch 8.9.0
 * dataServer负责数据的存储与读取
 * maintenanceUtils包含一些实现了数据清洗、复原等保持服务健康的脚本文件
 ### apiServer
->cd [工程路径]<BR>
+>cd [工程路径]<BR><BR>
 RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] LISTEN_ADDRESS=[服务监听地址与端口] go run apiServer/apiServerApplication.go
 >
 ### dataServer
->cd [工程路径]<BR>
+>cd [工程路径]<BR><BR>
 RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] LISTEN_ADDRESS=[服务监听地址与端口] STORAGE_ROOT=[本地文件存储路径] go run dataServer/dataServerApplication.go
 >
 ### maintenanceUtils
->cd [工程路径]<BR>
-RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] go run ./maintenanceUtils/deleteOldMetadata/versionLimit.go <BR>
-RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] STORAGE_ROOT=[本地文件存储路径] LISTEN_ADDRESS=127.0.0.1:55556 go run ./maintenanceUtils/deleteOrphanObject/deleteOrphanObject.go <BR>
+>cd [工程路径]<BR><BR>
+RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] go run ./maintenanceUtils/deleteOldMetadata/versionLimit.go <BR><BR>
+RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] STORAGE_ROOT=[本地文件存储路径] LISTEN_ADDRESS=127.0.0.1:55556 go run ./maintenanceUtils/deleteOrphanObject/deleteOrphanObject.go <BR><BR>
 RABBITMQ_SERVER=[rabbitMQ服务地址] ES_SERVER=[es服务地址] STORAGE_ROOT=[本地文件存储路径] go run ./maintenanceUtils/ObjectScanner/scan.go
 >
 # 使用方法
