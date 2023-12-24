@@ -1,6 +1,7 @@
 package main
 
 import (
+	"MyOSS/config"
 	"MyOSS/dataServer/heartbeat"
 	"MyOSS/dataServer/locate"
 	"MyOSS/dataServer/objects"
@@ -8,7 +9,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
@@ -19,5 +19,5 @@ func main() {
 	go temp.TempCleanWorcker()
 	http.HandleFunc("/objects/", objects.Handler)
 	http.HandleFunc("/temp/", temp.Handler)
-	log.Fatal(http.ListenAndServe(os.Getenv("LISTEN_ADDRESS"), nil))
+	log.Fatal(http.ListenAndServe(config.DATANODE_LISTEN_ADDRESS, nil))
 }

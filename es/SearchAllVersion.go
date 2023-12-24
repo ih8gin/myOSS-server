@@ -1,15 +1,15 @@
 package es
 
 import (
+	"MyOSS/config"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 )
 
 func SearchAllVersion(name string, from, size int) ([]Metadata, error) {
-	url := fmt.Sprintf("http://%s/metadata/_search?sort=name,version&from=%d&size=%d", os.Getenv("ES_SERVER"), from, size)
+	url := fmt.Sprintf("http://%s/metadata/_search?sort=name,version&from=%d&size=%d", config.ES_SERVER, from, size)
 	if name != "" {
 		url += "&q=name:" + name
 	}

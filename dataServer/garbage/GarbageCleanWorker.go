@@ -1,6 +1,7 @@
 package garbage
 
 import (
+	"MyOSS/config"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -10,7 +11,7 @@ import (
 // TODO 定期删除/garbage/路径下的长期文件，恢复存在引用的文件
 func GarbageCleanWorcker() {
 	for {
-		files, _ := filepath.Glob(os.Getenv("STORAGE_ROOT") + "/temp/*")
+		files, _ := filepath.Glob(config.STORAGE_ROOT + "/temp/*")
 		for i := range files {
 			file_info, _ := os.Stat(files[i])
 			winFileAttr := file_info.Sys().(*syscall.Win32FileAttributeData)

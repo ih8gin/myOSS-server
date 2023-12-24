@@ -1,12 +1,12 @@
 package es
 
 import (
+	"MyOSS/config"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 )
 
 type hit struct {
@@ -26,7 +26,7 @@ type searchResult struct {
 }
 
 func SearchLatestVersion(name string) (meta Metadata, e error) {
-	url := fmt.Sprintf("http://%s/metadata/_search?q=name:%s&size=1&sort=version:desc", os.Getenv("ES_SERVER"), url.PathEscape(name))
+	url := fmt.Sprintf("http://%s/metadata/_search?q=name:%s&size=1&sort=version:desc", config.ES_SERVER, url.PathEscape(name))
 	r, e := http.Get(url)
 	if e != nil {
 		return

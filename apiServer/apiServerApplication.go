@@ -6,10 +6,10 @@ import (
 	"MyOSS/apiServer/objects"
 	"MyOSS/apiServer/temp"
 	"MyOSS/apiServer/version"
+	"MyOSS/config"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
@@ -19,5 +19,5 @@ func main() {
 	http.HandleFunc("/locate/", locate.Handler)
 	http.HandleFunc("/versions/", version.Handler)
 	http.HandleFunc("/temp/", temp.Handler)
-	log.Fatal(http.ListenAndServe(os.Getenv("LISTEN_ADDRESS"), nil))
+	log.Fatal(http.ListenAndServe(config.APINODE_LISTEN_ADDRESS, nil))
 }

@@ -2,17 +2,17 @@ package main
 
 import (
 	"MyOSS/apiServer/objects"
+	"MyOSS/config"
 	"MyOSS/es"
 	"MyOSS/utils"
 	"fmt"
 	"log"
-	"os"
 	"path/filepath"
 	"strings"
 )
 
 func main() {
-	files, _ := filepath.Glob(os.Getenv("STORAGE_ROOT") + "/objects/*")
+	files, _ := filepath.Glob(config.STORAGE_ROOT + "/objects/*")
 
 	for i := range files {
 		hash := strings.Split(filepath.Base(files[i]), ".")[0]

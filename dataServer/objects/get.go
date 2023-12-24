@@ -1,6 +1,7 @@
 package objects
 
 import (
+	"MyOSS/config"
 	"MyOSS/dataServer/locate"
 	"compress/gzip"
 	"crypto/sha256"
@@ -24,7 +25,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFile(name string) string {
-	files, _ := filepath.Glob(os.Getenv("STORAGE_ROOT") + "/objects/" + name + ".*")
+	files, _ := filepath.Glob(config.STORAGE_ROOT + "/objects/" + name + ".*")
 	if len(files) != 1 {
 		return ""
 	}

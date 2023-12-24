@@ -1,16 +1,16 @@
 package heartbeat
 
 import (
+	"MyOSS/config"
 	"MyOSS/rabbitmq"
-	"os"
 	"time"
 )
 
 func StartHeartBeat() {
-	q := rabbitmq.New(os.Getenv("RABBITMQ_SERVER"))
+	q := rabbitmq.New(config.RABBITMQ_SERVER)
 	defer q.Close()
 	for {
-		q.Publish("apiServers", os.Getenv("LISTEN_ADDRESS"))
+		q.Publish("apiServers", config.DATANODE_LISTEN_ADDRESS)
 		//log.Printf("heartbeat \n")
 		time.Sleep(5 * time.Second)
 	}

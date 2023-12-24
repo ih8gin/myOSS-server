@@ -1,6 +1,7 @@
 package temp
 
 import (
+	"MyOSS/config"
 	"MyOSS/dataServer/locate"
 	"MyOSS/utils"
 	"compress/gzip"
@@ -20,7 +21,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	infoFile := os.Getenv("STORAGE_ROOT") + "/temp/" + uuid
+	infoFile := config.STORAGE_ROOT + "/temp/" + uuid
 	datFile := infoFile + ".dat"
 	f, e := os.Open(datFile)
 	if e != nil {
@@ -55,7 +56,7 @@ func commitTempObject(datFile string, tempInfo *tempInfo) {
 	if e != nil {
 		log.Println(e)
 	}
-	w, _ := os.Create(os.Getenv("STORAGE_ROOT") + "/objects/" + tempInfo.Name + "." + d)
+	w, _ := os.Create(config.STORAGE_ROOT + "/objects/" + tempInfo.Name + "." + d)
 	w2 := gzip.NewWriter(w)
 	_, e = io.Copy(w2, f)
 	if e != nil {

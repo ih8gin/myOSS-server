@@ -1,6 +1,7 @@
 package temp
 
 import (
+	"MyOSS/config"
 	"encoding/json"
 	"io"
 	"log"
@@ -17,7 +18,7 @@ func patch(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	infoFile := os.Getenv("STORAGE_ROOT") + "/temp/" + uuid
+	infoFile := config.STORAGE_ROOT + "/temp/" + uuid
 	datFile := infoFile + ".dat"
 	f, e := os.OpenFile(datFile, os.O_WRONLY|os.O_APPEND, 0)
 	if e != nil {
@@ -48,7 +49,7 @@ func patch(w http.ResponseWriter, r *http.Request) {
 }
 
 func readFromFile(uuid string) (*tempInfo, error) {
-	f, e := os.Open(os.Getenv("STORAGE_ROOT") + "/temp/" + uuid)
+	f, e := os.Open(config.STORAGE_ROOT + "/temp/" + uuid)
 	if e != nil {
 		return nil, e
 	}

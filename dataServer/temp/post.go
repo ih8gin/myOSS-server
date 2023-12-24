@@ -1,6 +1,7 @@
 package temp
 
 import (
+	"MyOSS/config"
 	"encoding/json"
 	uuid2 "github.com/google/uuid"
 	"log"
@@ -32,13 +33,13 @@ func post(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	f, _ := os.Create(os.Getenv("STORAGE_ROOT") + "/temp/" + t.Uuid + ".dat")
+	f, _ := os.Create(config.STORAGE_ROOT + "/temp/" + t.Uuid + ".dat")
 	defer f.Close()
 	w.Write([]byte(uuid))
 }
 
 func (t *tempInfo) writeToFile() error {
-	f, e := os.Create(os.Getenv("STORAGE_ROOT") + "/temp/" + t.Uuid)
+	f, e := os.Create(config.STORAGE_ROOT + "/temp/" + t.Uuid)
 	if e != nil {
 		return e
 	}

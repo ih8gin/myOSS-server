@@ -1,9 +1,9 @@
 package locate
 
 import (
+	"MyOSS/config"
 	"MyOSS/rabbitmq"
 	"MyOSS/types"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -36,7 +36,7 @@ func Del(hash string) {
 }
 
 func StartLocate() {
-	q := rabbitmq.New(os.Getenv("RABBITMQ_SERVER"))
+	q := rabbitmq.New(config.RABBITMQ_SERVER)
 	defer q.Close()
 	q.Bind("dataServers")
 	c := q.Consume()
@@ -47,13 +47,13 @@ func StartLocate() {
 		}
 		id := Locate(hash)
 		if id != -1 {
-			q.Send(msg.ReplyTo, types.LocateMessage{os.Getenv("LISTEN_ADDRESS"), id})
+			q.Send(msg.ReplyTo, types.LocateMessage{config.DATANODE_LISTEN_ADDRESS, id})
 		}
 	}
 }
 
 func CollectObjects() {
-	files, _ := filepath.Glob(os.Getenv("STORAGE_ROOT") + "/objects/*")
+	files, _ := filepath.Glob(config.STORAGE_ROOT + "/objects/*")
 	for i := range files {
 		file := strings.Split(filepath.Base(files[i]), ".")
 		if len(file) != 3 {

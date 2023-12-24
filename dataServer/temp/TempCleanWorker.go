@@ -1,6 +1,7 @@
 package temp
 
 import (
+	"MyOSS/config"
 	"os"
 	"path/filepath"
 	"syscall"
@@ -9,7 +10,7 @@ import (
 
 func TempCleanWorcker() {
 	for {
-		files, _ := filepath.Glob(os.Getenv("STORAGE_ROOT") + "/temp/*")
+		files, _ := filepath.Glob(config.STORAGE_ROOT + "/temp/*")
 		for i := range files {
 			file_info, _ := os.Stat(files[i])
 			winFileAttr := file_info.Sys().(*syscall.Win32FileAttributeData)
