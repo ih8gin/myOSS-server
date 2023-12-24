@@ -4,6 +4,7 @@ import (
 	"MyOSS/config"
 	"MyOSS/rabbitmq"
 	"MyOSS/types"
+	"MyOSS/utils"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -47,7 +48,8 @@ func StartLocate() {
 		}
 		id := Locate(hash)
 		if id != -1 {
-			q.Send(msg.ReplyTo, types.LocateMessage{config.DATANODE_LISTEN_ADDRESS, id})
+			ip, _ := utils.GetLocalIP()
+			q.Send(msg.ReplyTo, types.LocateMessage{ip + config.DATANODE_LISTEN_ADDRESS, id})
 		}
 	}
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"MyOSS/config"
 	"MyOSS/es"
+	"MyOSS/utils"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -27,7 +28,8 @@ func main() {
 
 func del(hash string) {
 	log.Println("delete", hash)
-	url := "http://" + config.DATANODE_LISTEN_ADDRESS + "/objects/" + hash
+	ip, _ := utils.GetLocalIP()
+	url := "http://" + ip + config.DATANODE_LISTEN_ADDRESS + "/objects/" + hash
 	request, _ := http.NewRequest("DELETE", url, nil)
 	client := http.Client{}
 	client.Do(request)

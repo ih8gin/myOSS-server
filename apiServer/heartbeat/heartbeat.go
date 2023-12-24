@@ -3,6 +3,7 @@ package heartbeat
 import (
 	"MyOSS/config"
 	"MyOSS/rabbitmq"
+	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -20,6 +21,7 @@ func ListenHeartbeat() {
 	go removeExpiredDataServer()
 	for msg := range c {
 		dataServer, e := strconv.Unquote(string(msg.Body))
+		fmt.Printf("find data Server: %s \n", dataServer)
 		if e != nil {
 			panic(e)
 		}
