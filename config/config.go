@@ -1,7 +1,7 @@
 package config
 
-const RABBITMQ_SERVER = "amqp://myoss:myoss@14.29.248.20:5672"
-const ES_SERVER = "14.29.248.20:9200"
-const STORAGE_ROOT = "C:/workplace/projects/MyOSS/Server/testData/1"
-const DATANODE_LISTEN_ADDRESS = "127.0.0.1:55551"
-const APINODE_LISTEN_ADDRESS = "127.0.0.1:55550"
+const RABBITMQ_SERVER = "amqp://username:password@host:port"
+const ES_SERVER = "host:port"
+const STORAGE_ROOT = "path"
+const DATANODE_LISTEN_ADDRESS = "host:port"
+const APINODE_LISTEN_ADDRESS = "host:port"
