@@ -6,7 +6,6 @@ import (
 	"MyOSS/es"
 	"MyOSS/utils"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -16,7 +15,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 	token := strings.Split(r.URL.EscapedPath(), "/")[2]
 	stream, e := rs.NewRSResumablePutStreamFromToken(token)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -34,14 +33,14 @@ func put(w http.ResponseWriter, r *http.Request) {
 	for {
 		n, e := io.ReadFull(r.Body, bytes)
 		if e != nil && e != io.EOF && e != io.ErrUnexpectedEOF {
-			log.Println(e)
+			utils.Logger.Warn(e.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		current += int64(n)
 		if current > stream.Size {
 			stream.Commit(false)
-			log.Println("resumable put exceed size")
+			utils.Logger.Warn("resumable put exceed size")
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
@@ -53,14 +52,14 @@ func put(w http.ResponseWriter, r *http.Request) {
 			stream.Flush()
 			getStream, e := rs.NewRSResumableGetStream(stream.Servers, stream.Uuids, stream.Size)
 			if e != nil {
-				log.Println(e)
+				utils.Logger.Warn(e.Error())
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			hash := utils.CalculateHash(getStream)
 			if hash != stream.Hash {
 				stream.Commit(false)
-				log.Println("resumable put done but hash mismatch")
+				utils.Logger.Warn("resumable put done but hash mismatch")
 				w.WriteHeader(http.StatusForbidden)
 				return
 			}
@@ -71,7 +70,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 			}
 			e = es.AddVersion(stream.Name, stream.Hash, stream.Size)
 			if e != nil {
-				log.Println(e)
+				utils.Logger.Warn(e.Error())
 				w.WriteHeader(http.StatusInternalServerError)
 			}
 			return

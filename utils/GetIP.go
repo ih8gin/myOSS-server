@@ -20,7 +20,7 @@ func GetLocalIP() (ipv4 string, err error) {
 		//buf := new(bytes.Buffer)
 		//buf.ReadFrom(resp.Body)
 		//s := buf.String()
-		fmt.Printf("init ip: %s \n", content)
+		Logger.Info(fmt.Sprintf("init ip: %s \n", content))
 		ip = string(content)
 		isInit = true
 	}

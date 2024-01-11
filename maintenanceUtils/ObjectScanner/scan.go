@@ -6,7 +6,6 @@ import (
 	"MyOSS/es"
 	"MyOSS/utils"
 	"fmt"
-	"log"
 	"path/filepath"
 	"strings"
 )
@@ -21,20 +20,20 @@ func main() {
 }
 
 func verify(hash string) {
-	log.Println("verify", hash)
+	utils.Logger.Warn(fmt.Sprintf("verify {%s}", hash))
 	size, e := es.SearchHashSize(hash)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	stream, e := objects.GetStream(hash, size)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	d := utils.CalculateHash(stream)
 	if d != hash {
-		log.Println(fmt.Sprintf("object hash mimatch, culculated=%s, requested=%s", d, hash))
+		utils.Logger.Warn(fmt.Sprintf("object hash mimatch, culculated=%s, requested=%s", d, hash))
 		return
 	}
 	stream.Close()

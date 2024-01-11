@@ -2,10 +2,10 @@ package rs
 
 import (
 	"MyOSS/apiServer/objectstream"
+	"MyOSS/utils"
 	"fmt"
 	"github.com/klauspost/reedsolomon"
 	"io"
-	"log"
 )
 
 type RSGetStream struct {
@@ -28,7 +28,7 @@ func NewRSGetStream(locateInfo map[int]string, dataServers []string, hash string
 		if e == nil {
 			readers[i] = reader
 		} else {
-			log.Println(e)
+			utils.Logger.Warn(e.Error())
 		}
 	}
 	writers := make([]io.Writer, ALL_SHARDS)

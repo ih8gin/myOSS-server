@@ -6,27 +6,25 @@ import (
 	"MyOSS/apiServer/rs"
 	"MyOSS/es"
 	"MyOSS/utils"
-	utils2 "MyOSS/utils"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
 )
 
 func put(w http.ResponseWriter, r *http.Request) {
-	hash := utils2.GetHashFromHeader(r.Header)
+	hash := utils.GetHashFromHeader(r.Header)
 	if hash == "" {
-		log.Println("missing object hash in digest header")
+		utils.Logger.Warn("missing object hash in digest header")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	size := utils2.GetSizeFromHeader(r.Header)
+	size := utils.GetSizeFromHeader(r.Header)
 	c, e := storeObject(r.Body, hash, size)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		w.WriteHeader(c)
 		return
 	}
@@ -38,7 +36,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 	name := strings.Split(r.URL.EscapedPath(), "/")[2]
 	e = es.AddVersion(name, hash, size)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"MyOSS/config"
 	"MyOSS/es"
 	"MyOSS/utils"
-	"log"
+	"fmt"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -17,7 +17,7 @@ func main() {
 		hash := strings.Split(filepath.Base(files[i]), ".")[0]
 		hashInMetadata, e := es.HasHash(hash)
 		if e != nil {
-			log.Println(e)
+			utils.Logger.Warn(e.Error())
 			return
 		}
 		if !hashInMetadata {
@@ -27,7 +27,7 @@ func main() {
 }
 
 func del(hash string) {
-	log.Println("delete", hash)
+	utils.Logger.Warn(fmt.Sprintf("delete {%s}", hash))
 	ip, _ := utils.GetLocalIP()
 	url := "http://" + ip + config.DATANODE_LISTEN_ADDRESS + "/objects/" + hash
 	request, _ := http.NewRequest("DELETE", url, nil)

@@ -2,10 +2,10 @@ package es
 
 import (
 	"MyOSS/config"
+	"MyOSS/utils"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -55,7 +55,7 @@ func SearchVersionStatus(min_doc_count int) ([]Bucket, error) {
 		return nil, e
 	}
 	if r.StatusCode != http.StatusOK {
-		log.Println(fmt.Sprintf("receive status code {%d} from es_server!", r.StatusCode))
+		utils.Logger.Warn(fmt.Sprintf("receive status code {%d} from es_server!", r.StatusCode))
 	}
 	b, _ := io.ReadAll(r.Body)
 	var ar aggregateResult

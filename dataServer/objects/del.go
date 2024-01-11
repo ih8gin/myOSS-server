@@ -3,7 +3,7 @@ package objects
 import (
 	"MyOSS/config"
 	"MyOSS/dataServer/locate"
-	"log"
+	"MyOSS/utils"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -20,7 +20,7 @@ func del(w http.ResponseWriter, r *http.Request) {
 	//log.Println(os.Getenv("STORAGE_ROOT") + "/garbage/" + filepath.Base(files[0]))
 	err := os.Rename(config.STORAGE_ROOT+"/objects/"+filepath.Base(files[0]), config.STORAGE_ROOT+"/garbage/"+filepath.Base(files[0]))
 	if err != nil {
-		log.Println(err)
+		utils.Logger.Warn(err.Error())
 	}
 	locate.Del(hash)
 }

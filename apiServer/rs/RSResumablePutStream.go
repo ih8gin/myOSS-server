@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -51,7 +50,7 @@ func NewRSResumablePutStreamFromToken(token string) (*RSResumablePutStream, erro
 	}
 	t.Hash, e = url.PathUnescape(t.Hash)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return nil, e
 	}
 
@@ -72,11 +71,11 @@ func (s *RSResumablePutStream) ToToken() string {
 func (s *RSResumablePutStream) CurrentSize() int64 {
 	r, e := http.Head(fmt.Sprintf("http://%s/temp/%s", s.Servers[0], s.Uuids[0]))
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return -1
 	}
 	if r.StatusCode != http.StatusOK {
-		log.Println(fmt.Sprintf("receive http code {%d} when query for current temp size", r.StatusCode))
+		utils.Logger.Warn(fmt.Sprintf("receive http code {%d} when query for current temp size", r.StatusCode))
 		return -1
 	}
 	size := utils.GetSizeFromHeader(r.Header) * DATA_SHARDS

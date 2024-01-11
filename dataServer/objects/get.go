@@ -3,11 +3,12 @@ package objects
 import (
 	"MyOSS/config"
 	"MyOSS/dataServer/locate"
+	"MyOSS/utils"
 	"compress/gzip"
 	"crypto/sha256"
 	"encoding/base64"
+	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -35,7 +36,7 @@ func getFile(name string) string {
 	d := url.PathEscape(base64.StdEncoding.EncodeToString(h.Sum(nil)))
 	hash := strings.Split(file, ".")[2]
 	if d != hash {
-		log.Println("object hash mismatch, remove", file)
+		utils.Logger.Warn(fmt.Sprintf("object hash mismatch, remove {%s}", file))
 		locate.Del(hash)
 		os.Remove(file)
 		return ""
@@ -46,13 +47,13 @@ func getFile(name string) string {
 func sendFile(w io.Writer, file string) {
 	f, e := os.Open(file)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	defer f.Close()
 	gzipStream, e := gzip.NewReader(f)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	io.Copy(w, gzipStream)
