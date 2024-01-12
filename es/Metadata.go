@@ -2,6 +2,7 @@ package es
 
 import (
 	"MyOSS/config"
+	"MyOSS/utils"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -56,6 +57,7 @@ func PutMetadata(name string, version int, size int64, hash string) error {
 		result, _ := io.ReadAll(r.Body)
 		return fmt.Errorf("fail to put metadata: %d %s", r.StatusCode, string(result))
 	}
+	utils.Logger.Info(fmt.Sprintf("Metadata-{%s} updated with version-{%d}, size-{%d}, hash-{%s}", name, version, size, hash))
 	return nil
 }
 

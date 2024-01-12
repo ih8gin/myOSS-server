@@ -22,7 +22,7 @@ func post(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	utils.Logger.Info(fmt.Sprintf("Received resumable transmission request for object with hash {%s}", hash))
+	utils.Logger.Info(fmt.Sprintf("Received resumable uploading request for object with hash {%s}", hash))
 
 	size, e := strconv.ParseInt(r.Header.Get("size"), 0, 64)
 	if e != nil {

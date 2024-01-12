@@ -20,6 +20,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	utils.Logger.Info(fmt.Sprintf("Received uploading request for object with hash {%s}", hash))
 
 	size := utils.GetSizeFromHeader(r.Header)
 	c, e := storeObject(r.Body, hash, size)
@@ -39,6 +40,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 		utils.Logger.Warn(e.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+	utils.Logger.Info(fmt.Sprintf("Successfully received object with hash {%s}", hash))
 }
 
 func storeObject(r io.Reader, hash string, size int64) (int, error) {

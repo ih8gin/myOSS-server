@@ -3,6 +3,7 @@ package objects
 import (
 	es2 "MyOSS/es"
 	"MyOSS/utils"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -21,4 +22,7 @@ func del(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	utils.Logger.Info(fmt.Sprintf("Request for deleting object-{%s} accepted.", name))
+
 }

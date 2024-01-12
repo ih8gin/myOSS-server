@@ -56,6 +56,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 	}
 	acceptGzip := false
 	encoding := r.Header["Accept-Encoding"]
+	encoder := "default"
 	for i := range encoding {
 		if encoding[i] == "gzip" {
 			acceptGzip = true
@@ -64,7 +65,8 @@ func get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if acceptGzip {
-		w.Header().Set("content-encoding", "gzip")
+		encoder = "gzip"
+		w.Header().Set("content-encoding", encoder)
 		w2 := gzip.NewWriter(w)
 		_, e = io.Copy(w2, stream)
 		w2.Close()
@@ -77,6 +79,8 @@ func get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	stream.Close()
+
+	utils.Logger.Info(fmt.Sprintf("Request for downloading object-{%s}-v{%d} hash-{%s} encoded with {%s} accepted.", name, version, hash, encoder))
 }
 
 func GetStream(hash string, size int64) (*rs.RSGetStream, error) {
