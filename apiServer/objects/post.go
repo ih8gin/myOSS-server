@@ -6,6 +6,7 @@ import (
 	"MyOSS/apiServer/rs"
 	"MyOSS/es"
 	"MyOSS/utils"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -14,16 +15,19 @@ import (
 
 func post(w http.ResponseWriter, r *http.Request) {
 	name := strings.Split(r.URL.EscapedPath(), "/")[2]
-	size, e := strconv.ParseInt(r.Header.Get("size"), 0, 64)
-	if e != nil {
-		utils.Logger.Warn(e.Error())
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
+
 	hash := utils.GetHashFromHeader(r.Header)
 	if hash == "" {
 		utils.Logger.Warn("missing object hash in digest header")
 		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	utils.Logger.Info(fmt.Sprintf("Received resumable transmission request for object with hash {%s}", hash))
+
+	size, e := strconv.ParseInt(r.Header.Get("size"), 0, 64)
+	if e != nil {
+		utils.Logger.Warn(e.Error())
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 	if locate.Exist(url.PathEscape(hash)) {
@@ -51,4 +55,5 @@ func post(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("location", "/temp/"+url.PathEscape(stream.ToToken()))
 	w.WriteHeader(http.StatusCreated)
+	utils.Logger.Info(fmt.Sprintf("Prepared to receive resumable transmission successfully, hash {%s}, target dataNode {%s}", hash, ds))
 }

@@ -20,9 +20,10 @@ func ListenHeartbeat() {
 	q.Bind("apiServers")
 	c := q.Consume()
 	go removeExpiredDataServer()
+
 	for msg := range c {
 		dataServer, e := strconv.Unquote(string(msg.Body))
-		utils.Logger.Debug(fmt.Sprintf("find data Server: %s \n", dataServer))
+		utils.Logger.Debug(fmt.Sprintf("find data Server: %s", dataServer))
 		if e != nil {
 			panic(e)
 		}
@@ -41,7 +42,6 @@ func removeExpiredDataServer() {
 				delete(dataServers, s)
 			}
 		}
-		//log.Printf("current data node: %s \n", dataServers)
 		mutex.Unlock()
 	}
 }
