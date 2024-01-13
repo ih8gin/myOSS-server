@@ -46,6 +46,7 @@ func put(w http.ResponseWriter, r *http.Request) {
 	}
 	f.Close()
 	commitTempObject(datFile, tempInfo)
+	utils.Logger.Info(fmt.Sprintf("File {%s} with size-{%d}, uuid-{%s} is persisted", tempInfo.Name, tempInfo.Size, tempInfo.Uuid))
 }
 
 func commitTempObject(datFile string, tempInfo *tempInfo) {

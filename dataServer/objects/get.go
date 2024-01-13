@@ -31,6 +31,7 @@ func getFile(name string) string {
 		return ""
 	}
 	file := files[0]
+	utils.Logger.Info(fmt.Sprintf("{%s} is requested", file))
 	h := sha256.New()
 	sendFile(h, file)
 	d := url.PathEscape(base64.StdEncoding.EncodeToString(h.Sum(nil)))
@@ -41,6 +42,7 @@ func getFile(name string) string {
 		os.Remove(file)
 		return ""
 	}
+	utils.Logger.Info(fmt.Sprintf("Successfully send {%s}", file))
 	return file
 }
 
