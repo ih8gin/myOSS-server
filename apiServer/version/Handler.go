@@ -2,8 +2,8 @@ package version
 
 import (
 	"MyOSS/es"
+	"MyOSS/utils"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -20,7 +20,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	for {
 		metas, e := es.SearchAllVersion(name, from, size)
 		if e != nil {
-			log.Println(e)
+			utils.Logger.Warn(e.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}

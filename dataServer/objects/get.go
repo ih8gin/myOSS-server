@@ -1,12 +1,14 @@
 package objects
 
 import (
+	"MyOSS/config"
 	"MyOSS/dataServer/locate"
+	"MyOSS/utils"
 	"compress/gzip"
 	"crypto/sha256"
 	"encoding/base64"
+	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -24,34 +26,36 @@ func get(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFile(name string) string {
-	files, _ := filepath.Glob(os.Getenv("STORAGE_ROOT") + "/objects/" + name + ".*")
+	files, _ := filepath.Glob(config.STORAGE_ROOT + "/objects/" + name + ".*")
 	if len(files) != 1 {
 		return ""
 	}
 	file := files[0]
+	utils.Logger.Info(fmt.Sprintf("{%s} is requested", file))
 	h := sha256.New()
 	sendFile(h, file)
 	d := url.PathEscape(base64.StdEncoding.EncodeToString(h.Sum(nil)))
 	hash := strings.Split(file, ".")[2]
 	if d != hash {
-		log.Println("object hash mismatch, remove", file)
+		utils.Logger.Warn(fmt.Sprintf("object hash mismatch, remove {%s}", file))
 		locate.Del(hash)
 		os.Remove(file)
 		return ""
 	}
+	utils.Logger.Info(fmt.Sprintf("Successfully send {%s}", file))
 	return file
 }
 
 func sendFile(w io.Writer, file string) {
 	f, e := os.Open(file)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	defer f.Close()
 	gzipStream, e := gzip.NewReader(f)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	io.Copy(w, gzipStream)

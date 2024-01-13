@@ -2,11 +2,11 @@ package locate
 
 import (
 	"MyOSS/apiServer/rs"
+	"MyOSS/config"
 	"MyOSS/rabbitmq"
 	"MyOSS/types"
 	"encoding/json"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 )
@@ -27,7 +27,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Locate(name string) (locateInfo map[int]string) {
-	q := rabbitmq.New(os.Getenv("RABBITMQ_SERVER"))
+	q := rabbitmq.New(config.RABBITMQ_SERVER)
 	q.Publish("dataServers", name)
 	c := q.Consume()
 	go func() {

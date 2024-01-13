@@ -1,15 +1,15 @@
 package es
 
 import (
+	"MyOSS/config"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 )
 
 func HasHash(hash string) (bool, error) {
-	url := fmt.Sprintf("http://%s/metadata/_search?q=hash:%s&size=0", os.Getenv("ES_SERVER"), hash)
+	url := fmt.Sprintf("http://%s/metadata/_search?q=hash:%s&size=0", config.ES_SERVER, hash)
 	r, e := http.Get(url)
 	if e != nil {
 		return false, e

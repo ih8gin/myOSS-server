@@ -1,11 +1,12 @@
 package es
 
 import (
+	"MyOSS/config"
+	"MyOSS/utils"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -17,7 +18,7 @@ type Metadata struct {
 }
 
 func getMetaData(name string, versionId int) (meta Metadata, e error) {
-	url := fmt.Sprintf("http://%s/metadata/_source/%s_%d", os.Getenv("ES_SERVER"), name, versionId)
+	url := fmt.Sprintf("http://%s/metadata/_source/%s_%d", config.ES_SERVER, name, versionId)
 	r, e := http.Get(url)
 	if e != nil {
 		return
@@ -41,7 +42,7 @@ func GetMetadata(name string, version int) (Metadata, error) {
 func PutMetadata(name string, version int, size int64, hash string) error {
 	doc := fmt.Sprintf(`{"name":"%s","version":"%d","size":"%d","hash":"%s"}`, name, version, size, hash)
 	client := http.Client{}
-	url := fmt.Sprintf("http://%s/metadata/_doc/%s_%d?op_type=create", os.Getenv("ES_SERVER"), name, version)
+	url := fmt.Sprintf("http://%s/metadata/_doc/%s_%d?op_type=create", config.ES_SERVER, name, version)
 	request, _ := http.NewRequest("PUT", url, strings.NewReader(doc))
 	// new es(8.+) api require to declare content-type in headers
 	request.Header.Set("content-type", "application/json")
@@ -56,12 +57,13 @@ func PutMetadata(name string, version int, size int64, hash string) error {
 		result, _ := io.ReadAll(r.Body)
 		return fmt.Errorf("fail to put metadata: %d %s", r.StatusCode, string(result))
 	}
+	utils.Logger.Info(fmt.Sprintf("Metadata-{%s} updated with version-{%d}, size-{%d}, hash-{%s}", name, version, size, hash))
 	return nil
 }
 
 func DelMetadata(name string, version int) {
 	client := http.Client{}
-	url := fmt.Sprintf("http://%s/metadata/_doc/%s_%d", os.Getenv("ES_SERVER"), name, version)
+	url := fmt.Sprintf("http://%s/metadata/_doc/%s_%d", config.ES_SERVER, name, version)
 	request, _ := http.NewRequest("DELETE", url, nil)
 	client.Do(request)
 }

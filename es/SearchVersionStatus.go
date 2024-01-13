@@ -1,12 +1,12 @@
 package es
 
 import (
+	"MyOSS/config"
+	"MyOSS/utils"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -28,7 +28,7 @@ type aggregateResult struct {
 
 func SearchVersionStatus(min_doc_count int) ([]Bucket, error) {
 	client := http.Client{}
-	url := fmt.Sprintf("http://%s/metadata/_search", os.Getenv("ES_SERVER"))
+	url := fmt.Sprintf("http://%s/metadata/_search", config.ES_SERVER)
 	body := fmt.Sprintf(`{
 		"size": 0,
 		"aggs": {
@@ -55,7 +55,7 @@ func SearchVersionStatus(min_doc_count int) ([]Bucket, error) {
 		return nil, e
 	}
 	if r.StatusCode != http.StatusOK {
-		log.Println(fmt.Sprintf("receive status code {%d} from es_server!", r.StatusCode))
+		utils.Logger.Warn(fmt.Sprintf("receive status code {%d} from es_server!", r.StatusCode))
 	}
 	b, _ := io.ReadAll(r.Body)
 	var ar aggregateResult

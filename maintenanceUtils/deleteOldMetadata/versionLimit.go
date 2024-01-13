@@ -2,7 +2,7 @@ package main
 
 import (
 	"MyOSS/es"
-	"log"
+	"MyOSS/utils"
 )
 
 const MIN_VERSION_COUNT = 5
@@ -10,7 +10,7 @@ const MIN_VERSION_COUNT = 5
 func main() {
 	buckets, e := es.SearchVersionStatus(MIN_VERSION_COUNT + 1)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		return
 	}
 	for i := range buckets {

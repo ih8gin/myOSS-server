@@ -1,9 +1,11 @@
 package heartbeat
 
 import (
+	"MyOSS/config"
 	"MyOSS/rabbitmq"
+	"MyOSS/utils"
+	"fmt"
 	"math/rand"
-	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -13,13 +15,15 @@ var dataServers = make(map[string]time.Time)
 var mutex sync.Mutex
 
 func ListenHeartbeat() {
-	q := rabbitmq.New(os.Getenv("RABBITMQ_SERVER"))
+	q := rabbitmq.New(config.RABBITMQ_SERVER)
 	defer q.Close()
 	q.Bind("apiServers")
 	c := q.Consume()
 	go removeExpiredDataServer()
+
 	for msg := range c {
 		dataServer, e := strconv.Unquote(string(msg.Body))
+		utils.Logger.Debug(fmt.Sprintf("find data Server: %s", dataServer))
 		if e != nil {
 			panic(e)
 		}
@@ -38,7 +42,6 @@ func removeExpiredDataServer() {
 				delete(dataServers, s)
 			}
 		}
-		//log.Printf("current data node: %s \n", dataServers)
 		mutex.Unlock()
 	}
 }

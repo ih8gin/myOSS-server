@@ -2,8 +2,8 @@ package temp
 
 import (
 	"MyOSS/apiServer/rs"
+	"MyOSS/utils"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -12,7 +12,7 @@ func head(w http.ResponseWriter, r *http.Request) {
 	token := strings.Split(r.URL.EscapedPath(), "/")[2]
 	stream, e := rs.NewRSResumablePutStreamFromToken(token)
 	if e != nil {
-		log.Println(e)
+		utils.Logger.Warn(e.Error())
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
